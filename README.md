@@ -62,6 +62,26 @@ for v in z
     x = (isa(v, Array) ? [:Y, v...] : [:Y, v])
     println(join(string.(reverse(x)),"->"))
 end
+# T->Y
+# B->T->Y
+# S->T->Y
+# P->T->Y
+# S->P->T->Y
+# A->P->T->Y
+# A->T->Y
+# G->Y
+# M->Y
+# T->M->Y
+# B->T->M->Y
+# S->T->M->Y
+# P->T->M->Y
+# S->P->T->M->Y
+# A->P->T->M->Y
+# A->T->M->Y
+# G->M->Y
+# S->M->Y
+# S->Y
+# A->Y
 
 anycause  = [(isa(v, Array) ? last(v) : v) for v in z]
 anycause_parent =  [v ∈ first.(zparents) for v in anycause]
@@ -70,6 +90,10 @@ for v in z[.!anycause_parent]
     x = (isa(v, Array) ? [:Y, v...] : [:Y, v])
     println(join(string.(reverse(x)),"->"));
 end
+# B->T->Y
+# P->T->Y
+# B->T->M->Y
+# P->T->M->Y
 
 function inferedges(nodes; start=missing, finish=missing, rev=true)
   edgesout = fill([], length(nodes))
@@ -87,6 +111,26 @@ function inferedges(nodes; start=missing, finish=missing, rev=true)
   edgesout
 end
 
-inferedges(z, finish=:Y)
-
+zedges = inferedges(z, finish=:Y)
+for v in zedges; println(v) ; end
+# Any[:T => :Y]
+# Any[:B => :T, :T => :Y]
+# Any[:S => :T, :T => :Y]
+# Any[:P => :T, :T => :Y]
+# Any[:S => :P, :P => :T, :T => :Y]
+# Any[:A => :P, :P => :T, :T => :Y]
+# Any[:A => :T, :T => :Y]
+# Any[:G => :Y]
+# Any[:M => :Y]
+# Any[:T => :M, :M => :Y]
+# Any[:B => :T, :T => :M, :M => :Y]
+# Any[:S => :T, :T => :M, :M => :Y]
+# Any[:P => :T, :T => :M, :M => :Y]
+# Any[:S => :P, :P => :T, :T => :M, :M => :Y]
+# Any[:A => :P, :P => :T, :T => :M, :M => :Y]
+# Any[:A => :T, :T => :M, :M => :Y]
+# Any[:G => :M, :M => :Y]
+# Any[:S => :M, :M => :Y]
+# Any[:S => :Y]
+# Any[:A => :Y]
 ```
