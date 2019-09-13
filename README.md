@@ -1,4 +1,4 @@
-# AcyclicGraphs
+# AcyclicGraphs.jl
 Package to Deal with AcyclicGraphs
 
 ```julia
