@@ -22,13 +22,13 @@ edges =[
 directcause(x::Symbol, edges) = [v for v in edges if v[2] == x]
 
 directcause(:Y, edges)
-julia> directcause(:Y, edges)
-5-element Array{Pair{Symbol,Symbol},1}:
-:T => :Y
-:G => :Y
-:M => :Y
-:S => :Y
-:A => :Y
+# julia> directcause(:Y, edges)
+# 5-element Array{Pair{Symbol,Symbol},1}:
+#  :T => :Y
+#  :G => :Y
+#  :M => :Y
+#  :S => :Y
+#  :A => :Y
 
 function anycausepath(x::Symbol, edges; used=[], target=missing)
   starter = (target===missing)
@@ -55,14 +55,6 @@ function anycausepath(x::Symbol, edges; used=[], target=missing)
   nodesout |> unique
 end
 
-edges =[
-  :B=>:T,
-  :T=>:Y,
-  :M=>:T,
-  :S=>:T,
-  :S=>:P,
-  :P=>:T]
-
 zparents = directcause(:Y, edges)
 
 z = anycausepath(:Y, edges)
@@ -79,10 +71,22 @@ for v in z[.!anycause_parent]
     println(join(string.(reverse(x)),"->"));
 end
 
-B->T->Y
-P->T->Y
-B->T->M->Y
-P->T->M->Y
-julia>
+function inferedges(nodes; start=missing, finish=missing, rev=true)
+  edgesout = fill([], length(nodes))
+  for i in 1:length(nodes)
+      nodeset = nodes[i]
+      rev && isa(nodeset, Array) && (nodeset = reverse(nodeset))
+      myset = []
+      (start !== missing) && push!(myset, start)
+      isa(nodeset, Array) && append!(myset, nodeset)
+      !isa(nodeset, Array) && push!(myset, nodeset)
+      (finish !== missing) && push!(myset, finish)
+
+      edgesout[i] = [myset[i] => myset[i+1] for i in 1:(length(myset)-1)]
+  end
+  edgesout
+end
+
+inferedges(z, finish=:Y)
 
 ```
